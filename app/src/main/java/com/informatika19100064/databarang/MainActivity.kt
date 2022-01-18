@@ -11,16 +11,25 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.informatika19100064.databarang.adapter.ListContent
 import com.informatika19100064.databarang.model.ResponseBarang
 import com.informatika19100064.databarang.network.koneksi
+import com.informatika19100064.databarang.service.SessionPreferences
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var sessionPreferences: SessionPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        sessionPreferences = SessionPreferences(this)
+        cekSession()
+        tv_username.text = sessionPreferences.getUserName()
+        tv_logout.setOnClickListener {
+            sessionPreferences.actionLogout()
+            cekSession()
+        }
 //        setSupportActionBar(findViewById(R.id.toolbar))
 
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
@@ -30,7 +39,16 @@ class MainActivity : AppCompatActivity() {
         getData()
 
     }
-    public fun getData() {
+    fun cekSession() {
+        sessionPreferences = SessionPreferences(this)
+        val userName = sessionPreferences.getUserName()
+        if (userName == null){
+            val i = Intent(this, LoginActivity::class.java)
+            startActivity(i)
+            finish()
+        }
+    }
+    fun getData() {
         koneksi.service.getBarang().enqueue(object : Callback<ResponseBarang> {
             override fun onFailure(call: Call<ResponseBarang>, t: Throwable) {
                 Log.d("pesan1", t.localizedMessage)

@@ -1,6 +1,7 @@
 package com.informatika19100064.databarang.network
 
 import com.informatika19100064.databarang.model.ResponseActionBarang
+import com.informatika19100064.databarang.model.ResponseAdmin
 import com.informatika19100064.databarang.model.ResponseBarang
 import retrofit2.Call
 import retrofit2.http.Field
@@ -33,6 +34,20 @@ interface ApiService {
     fun deleteBarang(
         @Field("id") id: String?
     ): Call<ResponseActionBarang>
+
+    @FormUrlEncoded
+    @POST("login.php")
+    fun login(
+        @Field("username") username: String?,
+        @Field("password") password: String?
+    ): Call<ResponseAdmin>
+
+    @FormUrlEncoded
+    @POST("register.php")
+    fun register(
+        @Field("username") username: String?,
+        @Field("password") password: String?
+    ): Call<ResponseAdmin>
 
 
 }
